@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
+import styles from "./page.module.css";
 
 interface FotoUsuario {
   id_foto: string;
@@ -17,9 +18,7 @@ export default function FotosPage() {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // -----------------------------
   // 🔒 1. Verificar usuario logueado
-  // -----------------------------
   useEffect(() => {
     const check = async () => {
       const { data } = await supabase.auth.getUser();
@@ -33,9 +32,7 @@ export default function FotosPage() {
     check();
   }, []);
 
-  // -----------------------------
   // 📥 2. Cargar fotos del usuario
-  // -----------------------------
   const cargarFotos = async (id_usuario: string) => {
     const { data, error } = await supabase
       .from("FotosUsuario")
@@ -47,9 +44,7 @@ export default function FotosPage() {
     setLoading(false);
   };
 
-  // -----------------------------
   // ⬆ 3. Subir foto al bucket + registrar
-  // -----------------------------
   const subirFoto = async () => {
     if (!file) return alert("Selecciona una imagen primero");
 
@@ -57,7 +52,7 @@ export default function FotosPage() {
     const nombreArchivo = `${user.id}-${Date.now()}.${extension}`;
 
     // 3.1 Subir al bucket
-    const { data: storageData, error: storageError } = await supabase.storage
+    const { error: storageError } = await supabase.storage
       .from("foto_usuario") // <-- tu bucket real
       .upload(nombreArchivo, file);
 
@@ -90,9 +85,7 @@ export default function FotosPage() {
     setFile(null);
   };
 
-  // -----------------------------
   // ❌ 4. Eliminar foto
-  // -----------------------------
   const eliminarFoto = async (foto: FotoUsuario) => {
     if (!confirm("¿Eliminar esta foto?")) return;
 
@@ -115,36 +108,30 @@ export default function FotosPage() {
   if (loading) return <p className="text-center mt-10">Cargando fotos...</p>;
 
   return (
-    <div className="max-w-xl mx-auto mt-10 p-6 space-y-6">
-
-      <h1 className="text-2xl font-bold text-center">Mis fotos</h1>
+    <div className={styles.container}>
+      <h1 className={styles.title}>Mis fotos</h1>
 
       {/* Subir archivo */}
-      <div className="border p-4 rounded-lg">
+      <div className={styles.uploadBox}>
         <input
           type="file"
           accept="image/*"
           onChange={(e) => setFile(e.target.files?.[0] || null)}
         />
-
-        <button
-          onClick={subirFoto}
-          className="bg-green-600 text-white w-full mt-3 p-2 rounded"
-        >
+        <button onClick={subirFoto} className={styles.uploadBtn}>
           Subir foto
         </button>
       </div>
 
       {/* Lista de fotos */}
-      <div className="grid grid-cols-1 gap-4">
+      <div>
         {fotos.map((f) => (
-          <div key={f.id_foto} className="border p-2 rounded shadow">
-            <img src={f.nombre} className="w-full h-64 object-cover rounded" />
-            <p className="text-sm mt-2">{f.descripcion}</p>
-
+          <div key={f.id_foto} className={styles.fotoCard}>
+            <img src={f.nombre} alt="foto" />
+            <p>{f.descripcion}</p>
             <button
               onClick={() => eliminarFoto(f)}
-              className="bg-red-600 text-white w-full mt-2 p-2 rounded"
+              className={styles.deleteBtn}
             >
               Eliminar
             </button>
@@ -154,3 +141,4 @@ export default function FotosPage() {
     </div>
   );
 }
+

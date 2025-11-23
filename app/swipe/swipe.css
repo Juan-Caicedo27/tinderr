@@ -1,0 +1,101 @@
+/* Fondo Tinder */
+.swipe-wrapper {
+  min-height: 100vh;
+  padding: 30px 20px;
+  background: linear-gradient(135deg, #ff5f6d, #ff006a);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Título */
+.swipe-title {
+  color: rgb(0, 0, 0);
+  font-size: 32px;
+  font-weight: 900;
+  margin-bottom: 20px;
+}
+
+/* Card */
+.card-container {
+  position: relative;
+}
+
+.swipe-card {
+  width: 330px;
+  height: 460px;
+  background: #fff;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+  position: relative;
+  transition: transform 0.25s ease-out;
+}
+
+/* Foto */
+.card-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Info */
+.card-info {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 18px;
+  color: white;
+  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+}
+
+.card-info h2 {
+  font-size: 26px;
+  font-weight: bold;
+}
+
+/* Botones */
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  margin-top: 22px;
+}
+
+.btn {
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.btn:hover {
+  transform: scale(1.15);
+}
+
+.dislike {
+  background: #ff4d4d;
+}
+
+.superlike {
+  background: #0095ff;
+}
+
+.like {
+  background: #00c851;
+}
+
+/* No users */
+.no-users {
+  color: white;
+  font-size: 20px;
+  margin-top: 40px;
+  text-align: center;
+}

@@ -2,8 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/lib/supabaseClient";
-
-// --- Configuración de gestos ---
+import "./swipe.css";
 const SWIPE_THRESHOLD = 120;
 
 export default function SwipePage() {
@@ -14,7 +13,7 @@ export default function SwipePage() {
   const cardRef = useRef<HTMLDivElement | null>(null);
   const startX = useRef(0);
 
-  // 🔹 Obtener usuario logueado
+  // Obtener usuario logueado
   useEffect(() => {
     const loadSession = async () => {
       const { data } = await supabase.auth.getUser();
@@ -30,40 +29,62 @@ export default function SwipePage() {
     loadSession();
   }, []);
 
-  // 🔹 Cargar usuarios que NO sean el actual y evitar repetidos
+  // Cargar usuarios
   const fetchUsuarios = async (userId: string) => {
     const { data, error } = await supabase
-      .from("Usuarios")
-      .select("*")
-      .neq("id", userId);
+      .from("usuarios")       // ← corregido
+      .select("id_usuario, nombre, biografia, ciudad")
+      .neq("id_usuario", userId);
 
     if (error) console.log(error);
 
-    setUsuarios(data || []);
+    // Cargar foto principal
+    if (data) {
+      const usuariosConFotos = await Promise.all(
+        data.map(async (u: any) => {
+          const { data: foto } = await supabase
+            .from("fotosusuario")
+            .select("nombre")
+            .eq("id_usuario", u.id_usuario)
+            .limit(1)
+            .single();
+
+          return {
+            ...u,
+            foto_url: foto
+              ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/fotos/${foto.nombre}`
+              : "/default.png",
+          };
+        })
+      );
+
+      setUsuarios(usuariosConFotos);
+    }
   };
 
-  // 🔹 Registrar like/dislike/superlike en BD
-  const registrarLike = async (targetId: string, tipo: "like" | "dislike" | "superlike") => {
-    await supabase.from("Likes").insert({
-      usuario_id: user.id,
-      target_usuario_id: targetId,
+  // Registrar acción
+  const registrarAccion = async (
+    targetId: string,
+    tipo: "like" | "dislike" | "superlike"
+  ) => {
+    await supabase.from("likes").insert({
+      id_usuario_origen: user.id,
+      id_usuario_destino: targetId,
       tipo,
     });
   };
 
-  // 🔹 Avanzar card
   const siguiente = () => {
     setIndex((prev) => prev + 1);
   };
 
-  // --- GESTOS DE SWIPE ---
+  // Swipe
   const onStart = (e: any) => {
     startX.current = e.touches ? e.touches[0].clientX : e.clientX;
   };
 
   const onMove = (e: any) => {
     if (!cardRef.current) return;
-
     const x = e.touches ? e.touches[0].clientX : e.clientX;
     const dx = x - startX.current;
 
@@ -76,50 +97,29 @@ export default function SwipePage() {
     const x = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
     const dx = x - startX.current;
 
-    // 👉 Like
     if (dx > SWIPE_THRESHOLD) {
-      registrarLike(usuario.id, "like");
+      registrarAccion(usuario.id_usuario, "like");
       siguiente();
-    }
-    // 👈 Dislike
-    else if (dx < -SWIPE_THRESHOLD) {
-      registrarLike(usuario.id, "dislike");
+    } else if (dx < -SWIPE_THRESHOLD) {
+      registrarAccion(usuario.id_usuario, "dislike");
       siguiente();
     }
 
     cardRef.current.style.transform = "";
   };
 
-  // 🔹 Botones manuales
-  const like = () => {
-    registrarLike(usuarios[index].id, "like");
-    siguiente();
-  };
-
-  const dislike = () => {
-    registrarLike(usuarios[index].id, "dislike");
-    siguiente();
-  };
-
-  const superlike = () => {
-    registrarLike(usuarios[index].id, "superlike");
-    siguiente();
-  };
-
   const usuarioActual = usuarios[index];
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4">
-
-      <h1 className="text-3xl font-bold mb-4">🔥 Swipe</h1>
+    <div className="swipe-wrapper">
+      <h1 className="swipe-title">🔥 Descubre</h1>
 
       {!usuarioActual ? (
-        <p>No hay más usuarios disponibles 🥲</p>
+        <p className="no-users">No hay más usuarios disponibles 🥲</p>
       ) : (
-        <div>
-          {/* CARD */}
+        <div className="card-container">
           <div
-            className="w-80 h-96 bg-white rounded-xl shadow-xl overflow-hidden relative"
+            className="swipe-card"
             ref={cardRef}
             onMouseDown={onStart}
             onMouseMove={onMove}
@@ -130,35 +130,21 @@ export default function SwipePage() {
           >
             <img
               src={usuarioActual.foto_url}
-              className="w-full h-full object-cover"
+              className="card-photo"
+              alt={usuarioActual.nombre}
             />
 
-            <div className="absolute bottom-0 bg-black/40 text-white p-4 w-full">
-              <h2 className="text-xl font-bold">{usuarioActual.nombre}</h2>
-              <p>{usuarioActual.descripcion}</p>
+            <div className="card-info">
+              <h2>{usuarioActual.nombre}</h2>
+              <p>{usuarioActual.biografia}</p>
             </div>
           </div>
 
           {/* BOTONES */}
-          <div className="flex gap-6 mt-6">
-            <button
-              onClick={dislike}
-              className="bg-red-500 text-white p-4 rounded-full text-xl"
-            >
-              ❌
-            </button>
-            <button
-              onClick={superlike}
-              className="bg-blue-500 text-white p-4 rounded-full text-xl"
-            >
-              ⭐
-            </button>
-            <button
-              onClick={like}
-              className="bg-green-500 text-white p-4 rounded-full text-xl"
-            >
-              ❤️
-            </button>
+          <div className="buttons">
+            <button className="btn dislike" onClick={() => onEnd({ changedTouches: [{ clientX: -200 }] }, usuarioActual)}>❌</button>
+            <button className="btn superlike" onClick={() => registrarAccion(usuarioActual.id_usuario, "superlike")}>⭐</button>
+            <button className="btn like" onClick={() => onEnd({ changedTouches: [{ clientX: 200 }] }, usuarioActual)}>❤️</button>
           </div>
         </div>
       )}

@@ -1,0 +1,82 @@
+.swipe-container {
+  min-height: 100vh;
+  padding: 20px;
+  background: linear-gradient(to bottom, #ffe0ea, #ffffff);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.titulo-app {
+  font-size: 32px;
+  font-weight: bold;
+  color: #e6397a;
+  margin-bottom: 20px;
+}
+
+.mensaje-match {
+  color: green;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.sin-usuarios {
+  margin-top: 120px;
+  color: #777;
+  font-size: 18px;
+}
+
+.contenedor-tarjeta {
+  position: relative;
+}
+
+.tarjeta {
+  width: 320px;
+  height: 520px;
+  background: white;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease;
+  position: relative;
+}
+
+.tarjeta-foto {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tarjeta-info {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: rgba(0,0,0,0.5);
+  color: white;
+  padding: 15px;
+}
+
+.botones {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.btn {
+  padding: 20px;
+  border-radius: 50%;
+  font-size: 26px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  color: white;
+}
+
+.btn:hover {
+  transform: scale(1.15);
+}
+
+.dislike { background: #e63946; }
+.superlike { background: #0077ff; }
+.like { background: #2ecc71; }

@@ -1,0 +1,86 @@
+/* --- CONTENEDOR GENERAL DEL PERFIL --- */
+.perfil-container {
+  max-width: 420px;
+  margin: 40px auto;
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.15);
+  animation: fadeIn 0.4s ease;
+}
+
+/* Título */
+.perfil-container h1 {
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #e60070;
+}
+
+/* Inputs */
+.perfil-container input,
+.perfil-container textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #cfcfcf;
+  font-size: 15px;
+  transition: 0.25s ease;
+}
+
+.perfil-container input:focus,
+.perfil-container textarea:focus {
+  outline: none;
+  border-color: #ff007f;
+  box-shadow: 0 0 4px rgba(255, 0, 128, 0.4);
+}
+
+/* Botón principal */
+.btn-guardar {
+  background: #ff006a;
+  color: white;
+  padding: 12px;
+  margin-top: 10px;
+  border-radius: 12px;
+  font-weight: bold;
+  width: 100%;
+  transition: 0.25s ease;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-guardar:hover {
+  background: #d6005c;
+}
+
+/* Botón cerrar sesión */
+.btn-logout {
+  background: #4d4d4d;
+  color: white;
+  padding: 12px;
+  width: 100%;
+  border-radius: 10px;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: 0.25s ease;
+  border: none;
+}
+
+.btn-logout:hover {
+  background: #3a3a3a;
+}
+
+/* Mensajes */
+.mensaje {
+  margin-top: 14px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* Animación */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

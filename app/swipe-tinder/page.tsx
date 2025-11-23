@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/lib/supabaseClient";
-
+import "./swipe.css";
 const SWIPE_THRESHOLD = 120;
 
 interface Usuario {
@@ -61,7 +61,6 @@ export default function SwipeTinderPage() {
     setUsuarios(usuariosCompletos);
   };
 
-  // 🔹 Registrar Like / Dislike / Superlike
   const registrarLike = async (targetId: string, tipo: "like" | "dislike" | "superlike") => {
     if (!user) return;
 
@@ -71,7 +70,6 @@ export default function SwipeTinderPage() {
       tipo,
     });
 
-    // Revisar match si es like o superlike
     if (tipo !== "dislike") {
       const { data: likePrevio } = await supabase
         .from("likes")
@@ -95,7 +93,7 @@ export default function SwipeTinderPage() {
 
   const siguiente = () => setIndex((prev) => prev + 1);
 
-  // --- Gestos de swipe ---
+  // Gestos de swipe
   const onStart = (e: any) => {
     startX.current = e.touches ? e.touches[0].clientX : e.clientX;
   };
@@ -121,18 +119,17 @@ export default function SwipeTinderPage() {
   const usuarioActual = usuarios[index];
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gradient-to-b from-pink-50 to-white">
-      <h1 className="text-3xl font-bold mb-4 text-pink-600">🔥 Swipe Tinder</h1>
+    <div className="swipe-container">
+      <h1 className="titulo-app">🔥 Swipe Tinder</h1>
 
-      {mensaje && <p className="mb-4 text-center text-green-600">{mensaje}</p>}
+      {mensaje && <p className="mensaje-match">{mensaje}</p>}
 
       {!usuarioActual ? (
-        <p className="text-gray-500 mt-20 text-lg">No hay más usuarios disponibles 🥲</p>
+        <p className="sin-usuarios">No hay más usuarios disponibles 🥲</p>
       ) : (
-        <div className="relative">
-          {/* Tarjeta */}
+        <div className="contenedor-tarjeta">
           <div
-            className="w-80 h-[520px] bg-white rounded-xl shadow-xl overflow-hidden relative transition-transform duration-300"
+            className="tarjeta"
             ref={cardRef}
             onMouseDown={onStart}
             onMouseMove={onMove}
@@ -144,32 +141,31 @@ export default function SwipeTinderPage() {
             <img
               src={usuarioActual.foto ?? "/placeholder.png"}
               alt={usuarioActual.nombre}
-              className="w-full h-full object-cover"
+              className="tarjeta-foto"
             />
-            <div className="absolute bottom-0 w-full bg-black/50 text-white p-4">
-              <h2 className="text-2xl font-bold">{usuarioActual.nombre}</h2>
-              <p className="text-sm">{usuarioActual.ciudad}</p>
-              <p className="mt-1 text-sm">{usuarioActual.biografia}</p>
+            <div className="tarjeta-info">
+              <h2>{usuarioActual.nombre}</h2>
+              <p>{usuarioActual.ciudad}</p>
+              <p>{usuarioActual.biografia}</p>
             </div>
           </div>
 
-          {/* Botones */}
-          <div className="flex justify-center gap-6 mt-6">
+          <div className="botones">
             <button
               onClick={() => registrarLike(usuarioActual.id_usuario, "dislike")}
-              className="bg-red-500 text-white p-5 rounded-full text-2xl shadow hover:scale-110 transition"
+              className="btn dislike"
             >
               ❌
             </button>
             <button
               onClick={() => registrarLike(usuarioActual.id_usuario, "superlike")}
-              className="bg-blue-500 text-white p-5 rounded-full text-2xl shadow hover:scale-110 transition"
+              className="btn superlike"
             >
               ⭐
             </button>
             <button
               onClick={() => registrarLike(usuarioActual.id_usuario, "like")}
-              className="bg-green-500 text-white p-5 rounded-full text-2xl shadow hover:scale-110 transition"
+              className="btn like"
             >
               ❤️
             </button>
@@ -179,4 +175,3 @@ export default function SwipeTinderPage() {
     </div>
   );
 }
-

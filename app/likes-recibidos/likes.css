@@ -1,0 +1,86 @@
+/* Fondo estilo Tinder */
+.likes-wrapper {
+  min-height: 100vh;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #ff5f6d, #ff006a);
+  background-attachment: fixed;
+  color: white;
+}
+
+/* Título */
+.titulo {
+  font-size: 32px;
+  font-weight: 900;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* Cards container */
+.likes-list {
+  max-width: 650px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* CARD estilo Tinder */
+.user-card {
+  display: flex;
+  gap: 15px;
+  background: #fff;
+  color: #333;
+  border-radius: 20px;
+  padding: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+  transition: transform 0.25s;
+}
+
+.user-card:hover {
+  transform: scale(1.03);
+}
+
+/* Foto redonda */
+.user-photo {
+  width: 85px;
+  height: 85px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Placeholder */
+.user-photo-placeholder {
+  width: 85px;
+  height: 85px;
+  border-radius: 50%;
+  background: #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-size: 14px;
+}
+
+/* Info del usuario */
+.user-info h2 {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.city {
+  font-size: 14px;
+  color: #777;
+}
+
+.bio {
+  margin-top: 5px;
+  font-size: 14px;
+}
+
+/* Mensajes centrados */
+.mensaje {
+  margin-top: 100px;
+  font-size: 20px;
+  text-align: center;
+  color: rgb(0, 0, 0);
+}

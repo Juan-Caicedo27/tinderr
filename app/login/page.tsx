@@ -3,28 +3,26 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
+import "./login.css";
 
 export default function LoginPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [message, setMessage] = useState<string | null>(null);
 
-  // 🔒 Estados y router para proteger ruta
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
 
   // --------------------------------------------------------------------------------
-  // 🛡️ PROTEGER LOGIN → Si ya está logueado, mandarlo a /user
+  // 🛡️ PROTEGER LOGIN → Si ya está logueado, enviarlo a /user
   // --------------------------------------------------------------------------------
   useEffect(() => {
     const checkUser = async () => {
       const { data } = await supabase.auth.getUser();
 
       if (!data.user) {
-        // ✅ Usuario NO logueado → permitir ver Login
         setLoading(false);
       } else {
-        // ❌ Ya está logueado → NO debe ver Login
         router.push("/user");
       }
     };
@@ -34,15 +32,17 @@ export default function LoginPage() {
 
   if (loading)
     return (
-      <p className="text-center mt-10">
+      <p style={{ textAlign: "center", marginTop: "40px", color: "white" }}>
         Verificando sesión...
       </p>
     );
 
   // --------------------------------------------------------------------------------
-  // 🔐 Iniciar sesión
+  // 🔐 INICIAR SESIÓN
   // --------------------------------------------------------------------------------
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     e.preventDefault();
 
     const { data: authData, error: authError } =
@@ -78,13 +78,12 @@ export default function LoginPage() {
 
     setMessage("✅ Bienvenido, " + userData.nombre);
 
-    // 🚀 Redirigir después del login
     router.push("/user");
   };
 
   return (
-    <div className="max-w-sm mx-auto mt-10 p-6 border rounded-lg shadow">
-      <h1 className="text-xl font-bold mb-4 text-center">Inicio de sesión</h1>
+    <div className="login-container">
+      <h1>Inicio de sesión</h1>
 
       <form onSubmit={handleLogin} className="flex flex-col gap-4">
         <input
@@ -93,7 +92,6 @@ export default function LoginPage() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className="border p-2 rounded"
         />
 
         <input
@@ -102,27 +100,21 @@ export default function LoginPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          className="border p-2 rounded"
         />
 
-        <button
-          type="submit"
-          className="bg-green-600 text-white p-2 rounded"
-        >
+        <button type="submit">
           Iniciar sesión
         </button>
       </form>
 
-      <p className="mt-4 text-center">
+      <p className="register-link">
         ¿No tienes cuenta?{" "}
-        <button
-          onClick={() => router.push("/register")}
-          className="text-blue-600 underline"
-        >
+        <button onClick={() => router.push("/register")}>
           Regístrate aquí
         </button>
       </p>
-      {message && <p className="mt-4 text-center">{message}</p>}
+
+      {message && <p className="message">{message}</p>}
     </div>
   );
 }

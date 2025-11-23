@@ -1,26 +1,85 @@
-@import "tailwindcss";
+/* RESET GENERAL */
+html, body {
+  min-height: 100vh;
+  margin: 0;
 
+  padding: 0;
+  background-color: #f6f7fb;
+  color: #111;
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* VARIABLES DE COLOR — TINDER STYLE */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-primary: #FD3A73;     /* Rosa Tinder principal */
+  --color-secondary: #FF5864;   /* Rosa secundario */
+  --color-accent: #FF7854;      /* Naranja rosado para detalles */
+  --color-bg-card: #FD3A73;
+  --color-bg: #FD3A73;
+  --color-text-primary: #111;
+  --color-text-secondary: #666;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* BODY */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+}
+
+/* ENLACES */
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+/* BOTONES REDONDOS ESTILO TINDER */
+.button {
+  background: linear-gradient(45deg, var(--color-primary), var(--color-secondary));
+  color: #fff;
+  border: none;
+  padding: 0.7rem 1.4rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  transition: transform 0.2s ease, opacity 0.3s ease;
+}
+
+.button:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+/* TARJETAS ESTILO TINDER */
+.card {
+  background-color: var(--color-bg-card);
+  border-radius: 16px; /* Más redondo como Tinder */
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  padding: 1.3rem;
+  margin: 1rem 0;
+  transition: transform 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+/* TEXTO SECUNDARIO */
+.text-secondary {
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+}
+
+/* EFECTO MUY CARACTERÍSTICO: sombras suaves y grandes */
+.shadow-soft {
+  box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+}
+
+/* Contenedor centrado estilo app */
+.container {
+  max-width: 420px; /* como una app móvil */
+  margin: 0 auto;
+  padding: 1rem;
 }
